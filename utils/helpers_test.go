@@ -19,7 +19,7 @@ func TestGetWeeksUntil(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := GetWeeksUntil(&tc.date)
+			got := GetWeeksUntil(tc.date)
 			if got != tc.expected {
 				t.Errorf("GetWeeksUntil() = %d; want %d", got, tc.expected)
 			}

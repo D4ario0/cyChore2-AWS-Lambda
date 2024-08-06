@@ -3,7 +3,6 @@ package emailsender
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 )
 
@@ -25,22 +24,27 @@ const (
 	Task4 = "Barrer Cocina"
 )
 
-func (ul UserList) ReadUsers(filepath string) {
-	file, err := os.Open(filepath)
-
-	if err != nil {
-		log.Fatalf("Error opening file %v", err)
-	}
-
-	defer file.Close()
-
-	decoder := *json.NewDecoder(file)
-	if err := decoder.Decode(&ul.Users); err != nil {
-		log.Fatalf("Error opening file")
-	}
+func NewUserList() *UserList {
+	return &UserList{Users: []User{}}
 }
 
-func (u User) AssignTasks(weeks int) {
+func (ul *UserList) ReadUsers(filepath string) error {
+	file, err := os.Open(filepath)
+	if err != nil {
+		return fmt.Errorf("error opening file: %w", err)
+	}
+	defer file.Close()
+
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(ul)
+	if err != nil {
+		return fmt.Errorf("error decoding JSON: %w", err)
+	}
+
+	return nil
+}
+
+func (u *User) AssignTasks(weeks int) {
 	var specialTask string
 
 	cycleOffset := (weeks % 8) / 4 //This returns an integer 0 or 1 depending on current chore cycle
@@ -51,7 +55,7 @@ func (u User) AssignTasks(weeks int) {
 		specialTask = fmt.Sprintf(Task2, "cocina")
 	}
 
-	tasks := []string{Task1, Task2, specialTask, Task4}
+	tasks := []string{Task1, specialTask, Task3, Task4}
 	taskIndex := u.Bufferindex + weeks
 	u.Task = tasks[taskIndex%4]
 }
