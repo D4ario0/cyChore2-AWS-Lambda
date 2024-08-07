@@ -1,20 +1,14 @@
 package emailsender
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 )
-
-type UserList struct {
-	Users []User `json:"users"`
-}
 
 type User struct {
 	Username    string `json:"name"`
-	Email       string `json:"email"`
+	Email       string `email:"email"`
 	Bufferindex int    `json:"index"`
-	Task        string
+	Task        string `json:"task,omitempty"`
 }
 
 const (
@@ -23,26 +17,6 @@ const (
 	Task3 = "Barrer área común / Limpiar Baño"
 	Task4 = "Barrer Cocina"
 )
-
-func NewUserList() *UserList {
-	return &UserList{Users: []User{}}
-}
-
-func (ul *UserList) ReadUsers(filepath string) error {
-	file, err := os.Open(filepath)
-	if err != nil {
-		return fmt.Errorf("error opening file: %w", err)
-	}
-	defer file.Close()
-
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(ul)
-	if err != nil {
-		return fmt.Errorf("error decoding JSON: %w", err)
-	}
-
-	return nil
-}
 
 func (u *User) AssignTasks(weeks int) {
 	var specialTask string
