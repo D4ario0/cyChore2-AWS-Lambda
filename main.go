@@ -1,53 +1,66 @@
 package main
 
 import (
-	"context"
-	"cyChore2/emailsender"
-	"cyChore2/utils"
+	"encoding/json"
 	"fmt"
+	"lambda-cychore/emailer"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-type Event struct {
-	Users []emailsender.User `json:"users"`
+type Response struct {
+	Message string `json:"message"`
 }
 
-func sendReminders(users *Event, sender *emailsender.EmailServer) {
+func sendReminders(user *emailer.User, agent *emailer.EmailAgent) {
 	today := time.Now()
-	weekOffset := utils.GetWeeksUntil(today)
+	weekOffset := emailer.GetWeeksUntil(today)
+	user.AssignTasks(weekOffset)
 
-	for _, user := range users.Users {
-		user.AssignTasks(weekOffset)
-		err := sender.SendWeeklyTaskMail(&user, "static/notification.html")
-		if err != nil {
-			log.Printf("Error sending email to %s: %v", user.Email, err)
-		} else {
-			log.Printf("Task reminder sent to %s at %v", user.Email, today)
-		}
+	err := agent.SendWeeklyTaskMail(user)
+	if err != nil {
+		log.Printf("Error sending email to %s: %v", user.Email, err)
+	} else {
+		log.Printf("Task reminder sent to %s at %v", user.Email, today)
 	}
+
 }
 
-func HandleRequest(ctx context.Context, users Event) (int, error) {
-	if len(users.Users) == 0 {
-		return http.StatusBadRequest, fmt.Errorf("received empty users list")
+func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	var user emailer.User
+
+	err := json.Unmarshal([]byte(request.Body), &user)
+	if err != nil {
+		return events.APIGatewayProxyResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
-	sender := emailsender.EmailServer{
+	sender := emailer.EmailAgent{
 		Domain: os.Getenv("SMTP_DOMAIN"),
 		Port:   os.Getenv("SMTP_PORT"),
 		Email:  os.Getenv("SMTP_EMAIL"),
-		Passwd: os.Getenv("SMTP_PSSWD"),
+		Passwd: os.Getenv("SMTP_PASSWORD"),
 	}
 
-	sendReminders(&users, &sender)
-	return http.StatusAccepted, nil
+	sendReminders(&user, &sender)
+
+	mssg := Response{Message: fmt.Sprintf("%s and %s and %d should send email", user.Name, user.Email, user.Bufferindex)}
+
+	jbytes, err := json.Marshal(mssg)
+	if err != nil {
+		return events.APIGatewayProxyResponse{StatusCode: http.StatusInternalServerError}, err
+	}
+
+	return events.APIGatewayProxyResponse{
+		StatusCode: http.StatusOK,
+		Body:       string(jbytes),
+	}, nil
 }
 
 func main() {
-	lambda.Start(HandleRequest)
+	lambda.Start(Handler)
 }

@@ -1,4 +1,4 @@
-module cyChore2
+module lambda-cychore
 
 go 1.22.4
 

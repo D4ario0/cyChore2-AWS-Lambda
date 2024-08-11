@@ -1,14 +1,12 @@
-package emailsender
+package emailer
 
-import (
-	"fmt"
-)
+import "fmt"
 
 type User struct {
-	Username    string `json:"name"`
+	Name        string `json:"name"`
 	Email       string `email:"email"`
 	Bufferindex int    `json:"index"`
-	Task        string `json:"task,omitempty"`
+	Task        string
 }
 
 const (
