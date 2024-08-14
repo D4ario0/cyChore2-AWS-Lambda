@@ -1,9 +1,3 @@
----
-title: Cychore2
-created: '2024-08-14T01:24:38.859Z'
-modified: '2024-08-14T02:51:32.035Z'
----
-
 # Cychore2
 ## About Cychore
 Cychore, a short for *`cyclic chores`*, is a project develop by me and used by... me. Living with roomates? delegating tasks with equality? Sounds like familiar problem? Like every other engineer I grabbed a drawing board and quickly dished-out a spreadsheet with tasks for everyone, making sure everyone had to do all tasks from the list by the end of the month. 
