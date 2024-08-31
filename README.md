@@ -17,7 +17,7 @@ Fast-forward 2 months into the system and it was about to fail, why? a bunch of 
 - [x] Email-focused HTML templates.
 - [ ] Tests (On it)
 
-Before I would open the project wait for it load in my IDE and click Run button vs. Now I double click a `.bat` file with a curl command.
+Before, I used to open my IDE, load the project and click Run button vs. Now I double click a `.bat` file with a curl command.
 
 ## Discussion
 If you are in the marketing business that sends a big amount of marketing and follow-up emails to your customer-base, it is worth considering the costs of building your own infrastructure as a microservice in contrast to use Sass products like `SendGrid` or `MailGun`.
