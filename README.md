@@ -4,18 +4,17 @@ Cychore, a short for *`cyclic chores`*, is a project develop by me and used by..
 
 Fast-forward 2 months into the system and it was about to fail, why? a bunch of college students easily forgetting to read their spreeadsheet shared in `Google Drive`. My inner engineer quickly tried to save the day creating the first iteration of cyChore, a `python` script that reads a `config` file, reads a list of users from a `json` and parses an `html` template to send everyone a plain email with their task for the week. Done. Simple. Effective.
 
-## Architecture
-![cychore_schema](https://github.com/user-attachments/assets/3ab70952-544a-4b6e-ac43-6db3a92ff540)
-
-
-
 ## cyChore2, What's different?
 `cyChore2` is just a more experienced me reinventing the wheel while keeping it simple. I know `Golang` now (ez to deploy btw). And everything is hosted on the cloud now.
+### Architecture
+![cychore_schema](https://github.com/user-attachments/assets/3ab70952-544a-4b6e-ac43-6db3a92ff540)
+
+### TODO
 - [x] Email Sender API built using `Go` standard library and `AWS SDK`.
 - [x] Serverless API using `AWS Services`, mainly `Lambda Functions`, `API Gateway` and `CloudWatch` for debugging.
 - [x] Best practices on project structure.
 - [x] Email-focused HTML templates.
-- [ ] Tests (On it)
+- [ ] Tests
 
 Before, I used to open my IDE, load the project and click Run button vs. Now I double click a `.bat` file with a curl command.
 
